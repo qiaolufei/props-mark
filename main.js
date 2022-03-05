@@ -70,6 +70,7 @@ function getProps(text){
         switch (index-flag){
           case 1: 
             obj.notes = trim(arr[0].indexOf('//') > -1 ? arr[0].split('//')[1] : '-') // 说明
+            obj.options = '-'
             break;
           case 2:
             obj.key = trim(foramtKey(arr[0])) // 参数名
@@ -82,7 +83,6 @@ function getProps(text){
             obj.default = trim(getDefault(arr[1].indexOf('//') > -1 ? arr[1].split('//')[0] : arr[1])) || '-' // default值
             break;
           case 5:
-            console.log(obj);
             result.push(obj)
             obj = {}
             if (arr[0].indexOf('validator') > -1) { // 处理validator情况
@@ -147,7 +147,7 @@ function writeMarkDown(arr){
     str += `${item.key} | ${item.notes} | _${item.type}_ | ${item.options} | ${item.default}\n\r`
   })
   vscode.window.createTerminal({name:'Props', message: `${str}`})
-  vscode.window.showInformationMessage('O(∩_∩)O哈哈~');
+  vscode.window.showInformationMessage('Props Success!');
 }
 
 module.exports = main
