@@ -4,7 +4,7 @@ function main() {
   vscode.window.activeTextEditor.edit(() => {
     const fileText = vscode.window.activeTextEditor.document.getText()
     const fileName = vscode.window.activeTextEditor.document.fileName
-    if(fileName.indexOf('.vue') > -1){
+    if(fileName.includes('.vue')){
       const result = getProps(fileText)
       writeMarkDown(result);
     }
@@ -19,26 +19,26 @@ function getProps(text){
   let obj = {}
   let secondIsOptions = true // 判断第二行是否为可选值注释
   linesArr.forEach((line,index) => {
-    if (line.indexOf('props') > -1) {
+    if (line.includes('props')) {
       start = true;
       flag = index;
     }
     if(start){
-      if (index - flag === 1 && line.indexOf('}') > -1){
+      if (index - flag === 1 && line.includes('}')){
         start = false
         flag = 0
       }
       if (index-flag === 1) {
-        secondIsOptions = linesArr[index + 1].indexOf('//') > -1
+        secondIsOptions = linesArr[index + 1].includes('//')
       }
       let arr = line.split(':')
       if (secondIsOptions) {
         switch (index-flag){
           case 1: 
-            obj.notes = trim(arr[0].indexOf('//') > -1 ? arr[0].split('//')[1] : '-') // 说明
+            obj.notes = trim(arr[0].includes('//') ? arr[0].split('//')[1] : '-') // 说明
             break;
           case 2: 
-            obj.options = trim(arr[0].indexOf('//') > -1 ? arr[0].split('//')[1] : '-') // 可选值
+            obj.options = trim(arr[0].includes('//') ? arr[0].split('//')[1] : '-') // 可选值
             break;
           case 3:
             obj.key = trim(foramtKey(arr[0])) // 参数名
@@ -48,12 +48,12 @@ function getProps(text){
             break;
           case 5:
             arr = line.split('default:')
-            obj.default = trim(getDefault(arr[1].indexOf('//') > -1 ? arr[1].split('//')[0] : arr[1])) || '-' // default值
+            obj.default = trim(getDefault(arr[1])) || '-' // default值
             break;
           case 6:
             result.push(obj)
             obj = {}
-            if (arr[0].indexOf('validator') > -1) { // 处理validator情况
+            if (arr[0].includes('validator')) { // 处理validator情况
               let n = index + 1
               while(linesArr[n].split("}")[0].length !== arr[0].split("validator")[0].length) {
                 n++
@@ -69,7 +69,7 @@ function getProps(text){
       } else {
         switch (index-flag){
           case 1: 
-            obj.notes = trim(arr[0].indexOf('//') > -1 ? arr[0].split('//')[1] : '-') // 说明
+            obj.notes = trim(arr[0].includes('//') ? arr[0].split('//')[1] : '-') // 说明
             obj.options = '-'
             break;
           case 2:
@@ -80,12 +80,12 @@ function getProps(text){
             break;
           case 4:
             arr = line.split('default:')
-            obj.default = trim(getDefault(arr[1].indexOf('//') > -1 ? arr[1].split('//')[0] : arr[1])) || '-' // default值
+            obj.default = trim(getDefault(arr[1])) || '-' // default值
             break;
           case 5:
             result.push(obj)
             obj = {}
-            if (arr[0].indexOf('validator') > -1) { // 处理validator情况
+            if (arr[0].includes('validator')) { // 处理validator情况
               let n = index + 1
               while(linesArr[n].split("}")[0].length !== arr[0].split("validator")[0].length) {
                 n++
@@ -113,7 +113,7 @@ function foramtKey(str){ // 驼峰写法转为-
 }
 
 function getType(str) { // 获取type
-  if (str.indexOf('[') > -1) { // 多个type
+  if (str.includes('[')) { // 多个type
     const strArr = str.replace(/\[/g, '').replace(/]/g, '').toLowerCase().split(',')
     const str_result = strArr.filter(x=> x.trim() !== '').join(' \\| ')
     return str_result
@@ -122,20 +122,20 @@ function getType(str) { // 获取type
 }
 
 function getDefault(str){ // 获取default
-  if (str.indexOf("''") > -1 || str.indexOf("\"\"") > -1){ // 空字符串
-    return ""
-  }
-  if (str.indexOf("'") > -1 || str.indexOf("\"") > -1) { // 字符串值
-    return str.replace(/'/g, '').replace(/"/g, '')
-  }
-  if (str.indexOf("=>") > -1) { // 复杂类型
-    if (str.indexOf("[]") > -1) { // 空数组
+  if (str.includes("=>")) { // 复杂类型
+    if (str.includes("[]")) { // 空数组
       return '[]'
     }
-    if (str.indexOf("{}") > -1) { // 空对象
+    if (str.includes("{}")) { // 空对象
       return '{}'
     }
     return str.split("=>")[1]
+  }
+  if (str.includes("''") || str.includes("\"\"")){ // 空字符串
+    return ""
+  }
+  if (str.includes("'") || str.includes("\"")) { // 字符串值
+    return str.replace(/'/g, '').replace(/"/g, '')
   }
   return str
 }
