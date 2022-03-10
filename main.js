@@ -19,7 +19,7 @@ function getProps(text){
   let obj = {}
   let secondIsOptions = true // 判断第二行是否为可选值注释
   linesArr.forEach((line,index) => {
-    if (line.includes('props')) {
+    if (line.includes('props:')) {
       start = true;
       flag = index;
     }
