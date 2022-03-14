@@ -5,25 +5,25 @@
 	"version": "0.0.1",
 	"publisher": "qiaolufei",
 	"engines": {
-		"vscode": "^1.63.0"
+		"vscode": "^1.65.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:props-mark.helloWorld"
+		"onCommand:props-mark.run"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "props-mark.helloWorld",
-				"title": "Hello World"
+				"command": "props-mark.run",
+				"title": "Props Mark"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "props-mark.helloWorld",
+				"command": "props-mark.run",
 				"key": "shift+q",
 				"mac": "shift+q"
 			}
