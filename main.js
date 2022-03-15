@@ -35,7 +35,7 @@ function getProps(text){
     prop_obj.type = trim(getType(properties.filter(x=> x.key.name === 'type')[0].value.toString()))
     // default值
     prop_obj.default = trim(getDefault(properties.filter(x=> x.key.name === 'default')[0].value.toString())) || '-'
-    const comments = item.leadingComments
+    const comments = item.leadingComments || []
     // 说明
     prop_obj.notes = trim(comments[0]?.value || '-')
     // 可选值
