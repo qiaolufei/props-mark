@@ -1,6 +1,6 @@
-# props-mark README
+# props-mark
 
-自动生成Markdown格式的Props介绍文档
+vscode插件，自动生成Markdown格式的Props介绍文档
 
 * 用法介绍
 
@@ -11,7 +11,9 @@
   * 书写规范
 
     > 第一行注释：参数说明
+    > 
     > 第二行注释：参数可选值（可省略）
+    > 
     > validator可省略
     >
 
